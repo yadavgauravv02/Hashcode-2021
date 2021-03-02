@@ -1,0 +1,335 @@
+#include<bits/stdc++.h>
+#include<map>
+#include<set>
+
+using namespace std;
+
+#define night_rider ios::sync_with_stdio(false);cin.tie(NULL);
+
+#define double long double
+#define int long long int
+#define en "\n"
+#define fi first
+#define se second
+#define PB push_back
+#define all(v) v.begin(),v.end()
+#define allr(v) v.rbegin(),v.rend()
+#define rep(i,x,y) for(int i=x ; i<y ; i++)
+#define erep(i,x,y) for(int i=x ; i<=y ; i++)
+#define erepr(i,x,y) for(int i=x ; i>=y ; i--)
+#define repr(i,x,y) for(int i=x ; i>y ; i--)
+typedef vector<int> vi;
+typedef vector<vector<int>> vii;
+typedef pair<int,int> pi;
+typedef vector<pair<int,int>> pii;
+
+int no_of_pizzas,team4,team2,team3;
+vector<set<string>> ing;
+vector<vector<int>> pizza_delivered;
+pii siz_ind ;
+int used[1000000],inf=1e18;
+
+void output() {
+    cout<<pizza_delivered.size()<<en;
+    rep(i,0,pizza_delivered.size()) {
+        cout<<pizza_delivered[i].size()<<" ";
+        for(int j : pizza_delivered[i]) cout<<j<<" ";
+        cout<<en;
+    }
+}
+
+void solve () {
+
+    cin>>no_of_pizzas>>team2>>team3>>team4;
+
+    rep(i,0,no_of_pizzas) {
+        int siz;cin>>siz;
+        set<string> v;
+        rep(j,0,siz) {
+            string s;
+            cin>>s;
+            v.insert(s);
+        }
+        ing.PB(v);
+        siz_ind.PB({siz,i});
+    }
+
+    //TEAM 4 BEGINS
+
+    sort(allr(siz_ind));
+
+    rep(i,0,team4) {
+        set<string> ans;
+        vi indice_delivered;
+        bool flag=1;
+
+        //FINDING FIRST PIZZA
+
+        rep(j,0,no_of_pizzas) {
+            int k=siz_ind[j].se;
+            if(!used[k]) {
+                ans=ing[k];
+                used[k]=1 ;
+                flag=0;                          //REVERSE THE CHANGES IF COUNT OF PIZZAS != TEAM SIZE
+                indice_delivered.PB(k);
+                break ;
+            }
+        }
+
+        //FINDING SECOND PIZZA
+
+        if(!flag) {
+            int ck=-1, max_diff=-inf;
+            set<string> chosen,temp;
+            rep(j,0,no_of_pizzas) {
+                int k=siz_ind[j].se;
+                temp=ans;
+                if(!used[k]) {
+                    for(auto itr : ing[k]) temp.insert(itr) ;
+                    int diff=(int)temp.size()-(int)ans.size();
+                    if(diff>max_diff) {
+                        max_diff=diff;
+                        chosen=temp;
+                        ck=k;
+                    }
+                }
+                temp.clear();
+            }
+            if(chosen.empty()) {
+                for(auto itr : indice_delivered) used[itr]=0;
+                indice_delivered.clear();
+                break;
+            }
+            else {
+                used[ck]=1;
+                indice_delivered.PB(ck);
+                for(auto itr : chosen) ans.insert(itr) ;
+            }
+        }
+        else break;
+
+        //FINDING THIRD PIZZA
+
+        int ck=-1, max_diff=-inf;
+        set<string> chosen,temp;
+        rep(j,0,no_of_pizzas) {
+            int k=siz_ind[j].se;
+            temp=ans;
+            if(!used[k]) {
+                for(auto itr : ing[k]) temp.insert(itr) ;
+                int diff=(int)temp.size()-(int)ans.size();
+                if(diff>max_diff) {
+                    max_diff=diff;
+                    chosen=temp;
+                    ck=k;
+                }
+            }
+            temp.clear();
+        }
+        if(chosen.empty()) {
+            for(auto itr : indice_delivered) used[itr]=0;
+            indice_delivered.clear();
+            break;
+        }
+        else {
+            used[ck]=1;
+            indice_delivered.PB(ck);
+            for(auto itr : chosen) ans.insert(itr) ;
+        }
+
+        // FINDING FOURTH PIZZA
+
+        ck=-1, max_diff=-inf;
+        chosen.clear();
+        temp.clear();
+        rep(j,0,no_of_pizzas) {
+            int k=siz_ind[j].se;
+            temp=ans;
+            if(!used[k]) {
+                for(auto itr : ing[k]) temp.insert(itr) ;
+                int diff=(int)temp.size()-(int)ans.size();
+                if(diff>max_diff) {
+                    max_diff=diff;
+                    chosen=temp;
+                    ck=k;
+                }
+            }
+            temp.clear();
+        }
+        if(chosen.empty()) {
+            for(auto itr : indice_delivered) used[itr]=0;
+            indice_delivered.clear();
+            break;
+        }
+        else {
+            used[ck]=1;
+            indice_delivered.PB(ck);
+            for(auto itr : chosen) ans.insert(itr) ;
+        }
+
+        pizza_delivered.PB(indice_delivered) ;
+    }
+
+    //TEAM 3 BEGINS
+
+    rep(i,0,team3) {
+        set<string> ans;
+        vi indice_delivered;
+        bool flag=1;
+
+        //FINDING FIRST PIZZA
+
+        rep(j,0,no_of_pizzas) {
+            int k=siz_ind[j].se;
+            if(!used[k]) {
+                ans=ing[k];
+                used[k]=1 ;
+                flag=0;                          //REVERSE THE CHANGES IF COUNT OF PIZZAS != TEAM SIZE
+                indice_delivered.PB(k);
+                break ;
+            }
+        }
+
+        //FINDING SECOND PIZZA
+
+        if(!flag) {
+            int ck=-1, max_diff=-inf;
+            set<string> chosen,temp;
+            rep(j,0,no_of_pizzas) {
+                int k=siz_ind[j].se;
+                temp=ans;
+                if(!used[k]) {
+                    for(auto itr : ing[k]) temp.insert(itr) ;
+                    int diff=(int)temp.size()-(int)ans.size();
+                    if(diff>max_diff) {
+                        max_diff=diff;
+                        chosen=temp;
+                        ck=k;
+                    }
+                }
+                temp.clear();
+            }
+            if(chosen.empty()) {
+                for(auto itr : indice_delivered) used[itr]=0;
+                indice_delivered.clear();
+                break;
+            }
+            else {
+                used[ck]=1;
+                indice_delivered.PB(ck);
+                for(auto itr : chosen) ans.insert(itr) ;
+            }
+        }
+        else break;
+
+        //FINDING THIRD PIZZA
+
+        int ck=-1, max_diff=-inf;
+        set<string> chosen,temp;
+        rep(j,0,no_of_pizzas) {
+            int k=siz_ind[j].se;
+            temp=ans;
+            if(!used[k]) {
+                for(auto itr : ing[k]) temp.insert(itr) ;
+                int diff=(int)temp.size()-(int)ans.size();
+                if(diff>max_diff) {
+                    max_diff=diff;
+                    chosen=temp;
+                    ck=k;
+                }
+            }
+            temp.clear();
+        }
+        if(chosen.empty()) {
+            for(auto itr : indice_delivered) used[itr]=0;
+            indice_delivered.clear();
+            break;
+        }
+        else {
+            used[ck]=1;
+            indice_delivered.PB(ck);
+            for(auto itr : chosen) ans.insert(itr) ;
+        }
+
+        pizza_delivered.PB(indice_delivered) ;
+    }
+
+    //TEAM 2 BEGINS
+
+    rep(i,0,team2) {
+        set<string> ans;
+        vi indice_delivered;
+        bool flag=1;
+
+        //FINDING FIRST PIZZA
+
+        rep(j,0,no_of_pizzas) {
+            int k=siz_ind[j].se;
+            if(!used[k]) {
+                ans=ing[k];
+                used[k]=1 ;
+                flag=0;                          //REVERSE THE CHANGES IF COUNT OF PIZZAS != TEAM SIZE
+                indice_delivered.PB(k);
+                break ;
+            }
+        }
+
+        //FINDING SECOND PIZZA
+
+        if(!flag) {
+            int ck=-1, max_diff=-inf;
+            set<string> chosen,temp;
+            rep(j,0,no_of_pizzas) {
+                int k=siz_ind[j].se;
+                temp=ans;
+                if(!used[k]) {
+                    for(auto itr : ing[k]) temp.insert(itr) ;
+                    int diff=(int)temp.size()-(int)ans.size();
+                    if(diff>max_diff) {
+                        max_diff=diff;
+                        chosen=temp;
+                        ck=k;
+                    }
+                }
+                temp.clear();
+            }
+            if(chosen.empty()) {
+                for(auto itr : indice_delivered) used[itr]=0;
+                indice_delivered.clear();
+                break;
+            }
+            else {
+                used[ck]=1;
+                indice_delivered.PB(ck);
+                for(auto itr : chosen) ans.insert(itr) ;
+            }
+        }
+        else break;
+
+        pizza_delivered.PB(indice_delivered) ;
+    }
+
+
+    output();
+}
+
+
+inline void runn(){
+	#ifndef ONLINE JUDGE
+	freopen("input.txt","r",stdin);
+	freopen("output.txt","w",stdout);
+	#endif
+}
+
+signed main()
+{
+	night_rider
+	//runn();
+	int test=1;
+	//cout<<fixed<<setprecision(15);
+    //cin>>test;
+	rep(i,1,test+1) {
+        // cout << "Case #" << i << ": ";
+        solve();
+    }
+}
